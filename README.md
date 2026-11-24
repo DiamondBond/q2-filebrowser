@@ -55,7 +55,17 @@ To remove it, press **File Browser** twice in **Library → App Store**, or dele
 
     contrib/shanlingq2/build.sh
 
-needs Go 1.22 or later and python3 (no dependencies outside Go's standard library), and leaves the card files in `target/shanlingq2/.filebrowser` and the release ZIP beside them. Pushing a tag `q2-vX.Y` that matches `cmd/q2-filebrowser/main.go`'s version builds and publishes the release (`.github/workflows/release.yml`). To look at the page without a Q2, serve any folder as the card:
+needs Go 1.22 or later and python3 (no dependencies outside Go's standard library), and leaves the card files in `target/shanlingq2/.filebrowser` and the release ZIP beside them.
+
+Releases are built and published locally, never by GitHub Actions. Raise `cmd/q2-filebrowser/main.go`'s version, commit and push `main`, then build from a clean checkout of that commit and publish its ZIP under the version's tag:
+
+    git worktree add /tmp/fb-release HEAD && cd /tmp/fb-release
+    contrib/shanlingq2/build.sh
+    gh release create q2-vX.Y target/shanlingq2/q2-filebrowser-vX.Y-*.zip --target "$(git rev-parse HEAD)" --latest --title "q2-filebrowser vX.Y" --notes "What changed"
+
+The ZIP is the release's only asset: Q2 Pod's App Store installs it, and reads only a new tag as an update. Remove the worktree afterwards (`git worktree remove /tmp/fb-release`).
+
+To look at the page without a Q2, serve any folder as the card:
 
     Q2_DEMO=/some/folder go test -run TestDemo -timeout 0 -v ./cmd/q2-filebrowser
 

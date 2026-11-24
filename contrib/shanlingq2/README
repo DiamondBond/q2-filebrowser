@@ -48,8 +48,8 @@ byte for byte, what else the file holds kept, damaged files refused); the tag AP
 a folder, numbering, covers, Read Only, X-Q2, the card away, paths outside the card, the library
 request); and the Q2's Edit Tags levels (rows and contexts within the firmware's limits, paging, the
 edit target, previews that write nothing, saves, Save for All, songs playing). python3
-contrib/shanlingq2/test_launcher.py tests the launcher. A tag q2-vX.Y matching
-cmd/q2-filebrowser/main.go's version publishes the release (.github/workflows/release.yml).
+contrib/shanlingq2/test_launcher.py tests the launcher. Releases are built and published locally
+(the top-level README.md's Build), never by GitHub Actions.
 
 Device
 ------
