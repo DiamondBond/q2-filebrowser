@@ -3,7 +3,7 @@ Shanling Q2 tools
 
 The Q2 runs Linux 5.10 on an Ingenic X2000 (MIPS32r2, nan2008) with glibc 2.28 and no IPv6.
 q2-filebrowser runs from the card's .filebrowser folder as a Q2 Pod card app (q2-pod's
-patch/addon.c): Q2 Pod lists it in Streaming, turns it on from that row and shows its QR code, draws
+patch/addon.c): Q2 Pod lists it in Library -> Apps, turns it on from that row and shows its QR code, draws
 its page and keeps the Q2 awake while files move. Nothing is flashed for it.
 
   build.sh     static Go for the Q2 and the card files, in target/shanlingq2/.filebrowser, zipped as
@@ -12,11 +12,11 @@ its page and keeps the Q2 awake while files move. Nothing is flashed for it.
                ELF flag the Q2's kernel requires and Go doesn't, and writes the ZIP
   launcher.sh  installed as .filebrowser/run: q2-filebrowser copied to /tmp and run there in a
                restart loop
-  q2app        installed as .filebrowser/q2app: the card app manifest (name=File Browser, qr=1: its
+  q2app        installed as .filebrowser/q2app: the card app manifest (name=File Browser, qr=1, row=library: its
                row opens the QR code page once it answers; search= is the Q2 keyboard's hint, which
                Edit Tags uses to type a value)
   icon.png, icon-40.png
-               installed beside it: Streaming's row icon, 52 px (Legacy) and 40 px (iPod), a
+               installed beside it: its row icon, 52 px (Legacy) and 40 px (iPod), a
                folder in white on amber, in Q2 Pod's style
   test_launcher.py
                runs launcher.sh on the host with a fake app
@@ -24,8 +24,8 @@ its page and keeps the Q2 awake while files move. Nothing is flashed for it.
 Install
 -------
 
-Q2 Pod's System settings -> Apps installs the latest release over Wi-Fi. By hand, unzip
-q2-filebrowser-*.zip from https://github.com/group-a-study/q2-filebrowser/releases/latest to the
+Q2 Pod's Library -> App Store installs the latest release over Wi-Fi. By hand, unzip
+q2-filebrowser-*.zip from https://github.com/DiamondBond/q2-filebrowser/releases/latest to the
 card's root with the Q2 powered off. See the top-level README.md.
 
 Build
@@ -54,7 +54,7 @@ cmd/q2-filebrowser/main.go's version publishes the release (.github/workflows/re
 Device
 ------
 
-Q2 Pod runs /bin/sh /mnt/mmc/.filebrowser/run when Streaming's File Browser row is pressed and it
+Q2 Pod runs /bin/sh /mnt/mmc/.filebrowser/run when its File Browser row is pressed and it
 isn't running. The launcher copies q2-filebrowser and itself to /tmp and leaves the card at once; the
 loop restarts it after a crash, waiting 5 s and doubling to a minute, and leaves its pid in
 /tmp/q2-filebrowser. An exit of 0 (turned off from the Q2, or idle for idle_minutes) ends the loop.

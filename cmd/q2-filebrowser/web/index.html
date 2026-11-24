@@ -182,7 +182,7 @@ ul.list { list-style: none; margin: 8px 0 0; padding: 0; }
 <section id="login" class="login hidden">
   <div class="logo"><svg><use href="#i-folder"/></svg></div>
   <h1>Q2 Files</h1>
-  <p>Enter the PIN on the Q2's screen<br>(Streaming → File Browser).</p>
+  <p>Enter the PIN on the Q2's screen<br>(Library → Apps → File Browser).</p>
   <form id="pinform"><input class="field pin" id="pinv" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" aria-label="PIN">
     <div class="err" id="pinerr"></div><button class="btn primary" style="width:100%;justify-content:center;margin-top:8px">Continue</button></form>
 </section>
@@ -672,7 +672,7 @@ async function tagDialog(paths) {
   }
   const dirs = [...new Set(shown.map(f => parent(f.path)))];
   const notes = [...new Set(shown.flatMap(f => f.notes || []))];
-  if (S.readOnly) notes.unshift("Read only: allow changes on the Q2 (Streaming → File Browser) to edit tags");
+  if (S.readOnly) notes.unshift("Read only: allow changes on the Q2 (Library → Apps → File Browser) to edit tags");
   else if (ro && n) notes.unshift((one ? "Its" : "Their") + " tags can be read here, not changed");
   for (const f of skipped.slice(0, 12)) notes.push(f.name + ": " + (f.error || "its tags can be read here, not changed"));
   if (skipped.length > 12) notes.push(`And ${skipped.length - 12} more not shown`);
@@ -880,8 +880,8 @@ $("#settings").onclick = () => {
   box.onchange = () => { S.hidden = box.checked; store.set("hidden", S.hidden); load(S.path, true); };
   modal(el("h2", { text: "Options" }),
     el("label", { style: "display:flex;gap:10px;align-items:center;padding:10px 0" }, box, el("span", { text: "Show hidden files (names starting with a dot: the add-ons' settings)" })),
-    el("p", { class: "sub", text: S.readOnly ? "Read only is on: turn it off on the Q2 (Streaming → File Browser) to upload, rename, move and delete." :
-      "Read only can be turned on from the Q2: Streaming → File Browser." }),
+    el("p", { class: "sub", text: S.readOnly ? "Read only is on: turn it off on the Q2 (Library → Apps → File Browser) to upload, rename, move and delete." :
+      "Read only can be turned on from the Q2: Library → Apps → File Browser." }),
     el("p", { class: "sub", text: "File Browser turns off on its own after a while unused. Turn it on again from the Q2." }),
     el("div", { class: "btns" }, el("button", { class: "btn", text: "Close", onclick: close })));
 };

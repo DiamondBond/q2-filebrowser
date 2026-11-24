@@ -26,7 +26,7 @@ import (
 	"github.com/group-a-study/q2-filebrowser/internal/tags"
 )
 
-const version = "q2-v1.3"
+const version = "q2-v1.4"
 
 // settings is .filebrowser/config.json.
 type settings struct {

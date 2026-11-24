@@ -1,23 +1,23 @@
 # q2-filebrowser
 
-A file manager for the **Shanling Q2** running [Q2 Pod](https://github.com/DiamondBond/q2-pod), after KOReader's Filebrowser plugin. Turn it on from the Q2 and it shows a QR code. Scan it with your phone, or open the address on a computer and type the PIN, on the same Wi-Fi, to browse the card, upload files and whole folders, download (a folder or several files as a ZIP), play songs, view pictures and text, rename, move, delete and make folders, and edit songs' tags and covers. Tags can be edited on the Q2 itself too. The page is built in: nothing is fetched from the internet. It needs a Q2 Pod build that supports card apps (its **System settings → Apps** lists File Browser).
+A file manager for the **Shanling Q2** running [Q2 Pod](https://github.com/DiamondBond/q2-pod), after KOReader's Filebrowser plugin. Turn it on from the Q2 and it shows a QR code. Scan it with your phone, or open the address on a computer and type the PIN, on the same Wi-Fi, to browse the card, upload files and whole folders, download (a folder or several files as a ZIP), play songs, view pictures and text, rename, move, delete and make folders, and edit songs' tags and covers. Tags can be edited on the Q2 itself too. The page is built in: nothing is fetched from the internet. It needs a Q2 Pod build that supports card apps (its **Library → App Store** lists File Browser).
 
 ## Install
 
-**Over Wi-Fi:** on the Q2, open **System settings → Apps** and press **File Browser**.
+**Over Wi-Fi:** on the Q2, open **Library → App Store** and press **File Browser**.
 
 **By hand:**
 
-1. Download `q2-filebrowser-*.zip` from the [latest release](https://github.com/group-a-study/q2-filebrowser/releases/latest).
+1. Download `q2-filebrowser-*.zip` from the [latest release](https://github.com/DiamondBond/q2-filebrowser/releases/latest).
 2. Power the Q2 off, then put its microSD card in your computer.
 3. Unzip the file to the card's root, so the card has `.filebrowser/q2-filebrowser`, `.filebrowser/run`, `.filebrowser/q2app` and its icons `.filebrowser/icon.png` and `.filebrowser/icon-40.png`. The leading dot hides the folder on macOS (Cmd+Shift+. in Finder shows it) and Linux.
 4. Eject the card, put it back in the Q2 and power it on.
 
-File Browser then has a row in **Streaming**, with its logo.
+File Browser then has a row in **Library → Apps**, with its logo (on Q2 Pod before 1.8.9, in **Streaming**).
 
 ## Use
 
-1. On the Q2, open **Streaming → File Browser**. It turns on, and once it answers, the QR code page opens: the code, the address (such as `192.168.1.23:8000`) and a PIN.
+1. On the Q2, open **Library → Apps → File Browser**. It turns on, and once it answers, the QR code page opens: the code, the address (such as `192.168.1.23:8000`) and a PIN.
 2. Scan the code with your phone's camera, which opens the page signed in. On a computer, open the address and type the PIN.
 3. **Back** shows File Browser's page on the Q2: **Open on Your Phone** (the address, PIN and code again), **Edit Tags**, the card's free space or what is moving, **Read Only**, and **Turn Off File Browser**.
 
@@ -47,9 +47,9 @@ A tag that fits the room the file keeps for tags is written in place; otherwise 
 
 ## Update and remove
 
-**System settings → Apps** shows **Update** when a newer release is out. By hand, replace `.filebrowser/q2-filebrowser`, `.filebrowser/run`, `.filebrowser/q2app`, `.filebrowser/icon.png` and `.filebrowser/icon-40.png`. Either way `.filebrowser/config.json` (the key, PIN, Read Only and idle time) is kept. Delete `web_key` and `pin` from it for new ones.
+**Library → App Store** shows **Update** when a newer release is out. By hand, replace `.filebrowser/q2-filebrowser`, `.filebrowser/run`, `.filebrowser/q2app`, `.filebrowser/icon.png` and `.filebrowser/icon-40.png`. Either way `.filebrowser/config.json` (the key, PIN, Read Only and idle time) is kept. Delete `web_key` and `pin` from it for new ones.
 
-To remove it, press **File Browser** twice in **System settings → Apps**, or delete `.filebrowser`.
+To remove it, press **File Browser** twice in **Library → App Store**, or delete `.filebrowser`.
 
 ## Build
 

@@ -169,7 +169,7 @@ func (w *web) api(rw http.ResponseWriter, r *http.Request) {
 	}
 	post := r.Method == http.MethodPost
 	if (changes[route] || route == "tags" && post) && set.ReadOnly {
-		refuse(rw, http.StatusForbidden, "Read only: allow changes on the Q2 (Streaming → File Browser)")
+		refuse(rw, http.StatusForbidden, "Read only: allow changes on the Q2 (Library → Apps → File Browser)")
 		return
 	}
 	hiddenToo := q.Get("hidden") == "1"
