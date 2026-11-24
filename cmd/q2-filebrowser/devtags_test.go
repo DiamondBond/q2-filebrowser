@@ -25,10 +25,11 @@ func devRig(t *testing.T) *rig {
 		"ALBUM=Tender Buttons", "TRACKNUMBER=1", "GENRE=Electronic")
 	writeFLAC(t, filepath.Join(r.card, "Music/Broadcast/02 Valerie.flac"), "TITLE=Valerie", "ARTIST=Broadcast",
 		"ALBUM=Tender Buttons", "TRACKNUMBER=2", "GENRE=Indie")
-	proc, caps, lib, wait := devProcRoot, capsFile, libraryFile, devWait
+	proc, caps, lib, wait, playing := devProcRoot, capsFile, libraryFile, devWait, playingFile
 	devProcRoot = t.TempDir()
 	capsFile, libraryFile = filepath.Join(r.tmp, "caps"), filepath.Join(r.tmp, "library")
-	t.Cleanup(func() { devProcRoot, capsFile, libraryFile, devWait = proc, caps, lib, wait })
+	playingFile = filepath.Join(r.tmp, "playing")
+	t.Cleanup(func() { devProcRoot, capsFile, libraryFile, devWait, playingFile = proc, caps, lib, wait, playing })
 	// The Q2's socket comes a moment after start returns: a test shorter than that would leave it
 	// to be made in the temp folder as that is removed.
 	waitFor(t, "the Q2's socket", 10*time.Second, func() bool {
@@ -1157,5 +1158,18 @@ func TestDevPlaying(t *testing.T) {
 	devProcRoot = filepath.Join(proc, "nowhere")
 	if got := devPlaying(r.card); len(got) != 0 {
 		t.Fatalf("no proc %q", got)
+	}
+	// Q2 Pod with "playing" names the song itself; /proc isn't read.
+	devProcRoot = proc
+	os.WriteFile(capsFile, []byte("library playing\n"), 0o644)
+	if got := devPlaying(r.card); len(got) != 0 {
+		t.Fatalf("no file %q", got)
+	}
+	for to, want := range map[string]string{card("/Music/Z/z.flac"): "/Music/Z/z.flac", card("/.deezer/d.flac"): "",
+		card("/page.html"): "", "http://127.0.0.1:8096/s": "", card("/Music/Gone.flac"): ""} {
+		os.WriteFile(playingFile, []byte(to), 0o644)
+		if got := strings.Join(devPlaying(r.card), ","); got != want {
+			t.Fatalf("%s: playing %q", to, got)
+		}
 	}
 }

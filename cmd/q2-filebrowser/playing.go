@@ -13,10 +13,13 @@ import (
 // What the Q2 is playing, as near as File Browser can tell: the songs on the card another process
 // holds open, by /proc/<pid>/fd's links. A song whose tags were written again since shows as
 // "<path> (deleted)" there (the player still reads its old copy); the new one is at the same path.
-// The links don't say which was opened last, so they come by name.
+// The links don't say which was opened last, so they come by name. An app runs without root on
+// Q2 Pod 1.9.1 and later and can't read the player's links, so Q2 Pod (with "playing" in its caps)
+// names the song its player plays or pauses in playingFile instead: its path on the card, or no
+// file.
 
-// devProcRoot is /proc; tests point it at a tree of their own.
-var devProcRoot = "/proc"
+// devProcRoot is /proc and playingFile Q2 Pod's; tests point them at their own.
+var devProcRoot, playingFile = "/proc", "/tmp/q2-playing"
 
 // devPlayingMax is how many playing songs the tag editor offers.
 const devPlayingMax = 3
@@ -25,6 +28,13 @@ const devPlayingMax = 3
 // for at most half a second.
 func devPlaying(root string) []string {
 	root = filepath.Clean(root)
+	if hasCap("playing") {
+		b, _ := os.ReadFile(playingFile)
+		if p, ok := devCardSong(root, string(b)); ok {
+			return []string{p}
+		}
+		return nil
+	}
 	pids, err := os.ReadDir(devProcRoot)
 	if err != nil {
 		return nil
@@ -47,19 +57,11 @@ func devPlaying(root string) []string {
 		}
 		for _, fd := range fds {
 			to, err := os.Readlink(filepath.Join(dir, fd.Name()))
-			if err != nil || !filepath.IsAbs(to) {
+			if err != nil {
 				continue
 			}
-			to = filepath.Clean(strings.TrimSuffix(to, " (deleted)"))
-			rel, err := filepath.Rel(root, to)
-			if err != nil || rel == "." || rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
-				continue
-			}
-			p := "/" + filepath.ToSlash(rel)
-			if seen[p] || !devShown(p) || !isSong(path.Base(p)) {
-				continue
-			}
-			if st, err := os.Stat(to); err != nil || st.IsDir() {
+			p, ok := devCardSong(root, strings.TrimSuffix(to, " (deleted)"))
+			if !ok || seen[p] {
 				continue
 			}
 			seen[p] = true
@@ -71,6 +73,26 @@ func devPlaying(root string) []string {
 		out = out[:devPlayingMax]
 	}
 	return out
+}
+
+// devCardSong is to, a file's absolute path, as the card path of a song the browser shows.
+func devCardSong(root, to string) (string, bool) {
+	if !filepath.IsAbs(to) {
+		return "", false
+	}
+	to = filepath.Clean(to)
+	rel, err := filepath.Rel(root, to)
+	if err != nil || rel == "." || rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return "", false
+	}
+	p := "/" + filepath.ToSlash(rel)
+	if !devShown(p) || !isSong(path.Base(p)) {
+		return "", false
+	}
+	if st, err := os.Stat(to); err != nil || st.IsDir() {
+		return "", false
+	}
+	return p, true
 }
 
 // devShown is whether the card path p is outside dot folders, as the browser shows the card.
